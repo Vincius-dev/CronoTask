@@ -4,11 +4,11 @@ services:
     container_name: spring_postgres
     restart: always
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: dev
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: dev123
+      POSTGRES_DB: ${POSTGRES_DB:-dev}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
