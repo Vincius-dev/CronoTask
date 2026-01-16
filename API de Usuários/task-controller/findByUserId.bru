@@ -1,0 +1,15 @@
+meta {
+  name: findByUserId
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/user/:userId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: 
+}

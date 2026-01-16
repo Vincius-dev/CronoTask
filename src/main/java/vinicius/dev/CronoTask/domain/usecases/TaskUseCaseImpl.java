@@ -8,6 +8,7 @@ import vinicius.dev.CronoTask.domain.repositories.TaskRepository;
 import vinicius.dev.CronoTask.dto.TaskInputDTO;
 import vinicius.dev.CronoTask.dto.TaskOutputDTO;
 import vinicius.dev.CronoTask.dto.TaskPatchDTO;
+import vinicius.dev.CronoTask.infra.exceptions.ResourceNotFoundException;
 import vinicius.dev.CronoTask.infra.mappers.TaskMapper;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class TaskUseCaseImpl implements TaskUseCase {
     @Transactional(readOnly = true)
     public TaskOutputDTO findById(UUID id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         return taskMapper.toDTO(task);
     }
 
@@ -50,7 +51,7 @@ public class TaskUseCaseImpl implements TaskUseCase {
     @Transactional
     public TaskOutputDTO update(UUID id, TaskInputDTO input) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
 
         task.setName(input.getName());
         task.setDescription(input.getDescription());
@@ -62,7 +63,7 @@ public class TaskUseCaseImpl implements TaskUseCase {
     @Transactional
     public void delete(UUID id) {
         if (!taskRepository.findById(id).isPresent()) {
-            throw new RuntimeException("Task not found");
+            throw new ResourceNotFoundException("Task not found with id: " + id);
         }
         taskRepository.deleteById(id);
     }
@@ -70,7 +71,7 @@ public class TaskUseCaseImpl implements TaskUseCase {
     @Transactional
     public TaskOutputDTO patch(UUID id, TaskPatchDTO patch) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
 
         if (patch.getName() != null) {
             task.setName(patch.getName());

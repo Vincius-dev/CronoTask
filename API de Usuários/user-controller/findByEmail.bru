@@ -1,0 +1,15 @@
+meta {
+  name: findByEmail
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/users/email/:email
+  body: none
+  auth: inherit
+}
+
+params:path {
+  email: 
+}

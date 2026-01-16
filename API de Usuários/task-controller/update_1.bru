@@ -1,0 +1,23 @@
+meta {
+  name: update_1
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/tasks/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "userId": "",
+    "name": "",
+    "description": ""
+  }
+}

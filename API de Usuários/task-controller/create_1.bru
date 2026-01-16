@@ -1,0 +1,19 @@
+meta {
+  name: create_1
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "userId": "",
+    "name": "",
+    "description": ""
+  }
+}
