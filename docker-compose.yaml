@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: spring_postgres
+    container_name: cronotask_postgres
     restart: always
     ports:
       - "${DB_PORT:-5432}:5432"
@@ -11,6 +11,40 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cronotask-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cronotask_app
+    restart: always
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    environment:
+      SPRING_APPLICATION_NAME: CronoTask
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-dev}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-dev123}
+      JPA_HIBERNATE_DDL_AUTO: update
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cronotask-network
 
 volumes:
   postgres_data:
+
+networks:
+  cronotask-network:
+    driver: bridge
