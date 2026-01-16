@@ -91,7 +91,7 @@ http://localhost:8080/v3/api-docs
 Para testar a API, importe a coleção do Bruno localizada em:
 
 ```
-/bruno/CronoTask API.bru
+/API de Usuários
 ```
 
 > 💡 **Bruno** é um cliente de API open-source alternativo ao Postman. Baixe em: https://www.usebruno.com/
@@ -99,8 +99,8 @@ Para testar a API, importe a coleção do Bruno localizada em:
 **Como importar no Bruno:**
 1. Abra o Bruno
 2. Clique em "Open Collection"
-3. Navegue até a pasta `/bruno` do projeto
-4. Selecione a coleção `CronoTask API.bru`
+3. Navegue até a pasta `/API de Usuários` do projeto
+4. Abra a coleção completa com todos os endpoints de Tasks e Users
 
 ## 🏗️ Arquitetura
 
