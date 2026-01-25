@@ -14,35 +14,40 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
+public class RefreshTokenRepositoryImpl implements RefreshTokenRepository
+{
 
     private final JpaRefreshTokenRepository jpaRepository;
     private final RefreshTokenMapper mapper;
 
     @Override
     @Transactional
-    public RefreshToken save(RefreshToken refreshToken) {
-        RefreshTokenEntity entity = mapper.toEntity(refreshToken);
-        RefreshTokenEntity saved = jpaRepository.save(entity);
-        return mapper.toDomain(saved);
+    public RefreshToken save( RefreshToken refreshToken )
+    {
+        RefreshTokenEntity entity = mapper.toEntity( refreshToken );
+        RefreshTokenEntity saved = jpaRepository.save( entity );
+        return mapper.toDomain( saved );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<RefreshToken> findByToken(String token) {
-        return jpaRepository.findByToken(token)
-                .map(mapper::toDomain);
+    public Optional<RefreshToken> findByToken( String token )
+    {
+        return jpaRepository.findByToken( token )
+                .map( mapper::toDomain );
     }
 
     @Override
     @Transactional
-    public void revokeAllByUserId(UUID userId) {
-        jpaRepository.revokeAllByUserId(userId, LocalDateTime.now());
+    public void revokeAllByUserId( UUID userId )
+    {
+        jpaRepository.revokeAllByUserId( userId, LocalDateTime.now( ) );
     }
 
     @Override
     @Transactional
-    public void deleteExpiredTokens() {
-        jpaRepository.deleteExpiredTokens(LocalDateTime.now());
+    public void deleteExpiredTokens()
+    {
+        jpaRepository.deleteExpiredTokens( LocalDateTime.now( ) );
     }
 }

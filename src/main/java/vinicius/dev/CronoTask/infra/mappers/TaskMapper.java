@@ -6,8 +6,11 @@ import vinicius.dev.CronoTask.dto.TaskOutputDTO;
 import vinicius.dev.CronoTask.infra.entities.TaskEntity;
 
 @Mapper(componentModel = "spring")
-public interface TaskMapper {
-    Task toDomain(TaskEntity entity);
-    TaskEntity toEntity(Task domain);
-    TaskOutputDTO toDTO(Task domain);
+public interface TaskMapper
+{
+    Task toDomain( TaskEntity entity );
+
+    TaskEntity toEntity( Task domain );
+
+    TaskOutputDTO toDTO( Task domain );
 }

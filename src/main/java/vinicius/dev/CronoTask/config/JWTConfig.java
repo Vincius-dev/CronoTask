@@ -18,9 +18,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 
 @Component
-public class JWTConfig {
+public class JWTConfig
+{
 
-    private static final Logger logger = LoggerFactory.getLogger(JWTConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger( JWTConfig.class );
 
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
@@ -38,51 +39,58 @@ public class JWTConfig {
     private PublicKey publicKey;
 
     @PostConstruct
-    public void init() throws Exception {
+    public void init() throws Exception
+    {
         // O Java precisa de um "KeyFactory" para reconstruir a chave a partir dos bytes
         // Para EdDSA (Ed25519), usamos este algoritmo:
-        KeyFactory keyFactory = KeyFactory.getInstance("Ed25519");
+        KeyFactory keyFactory = KeyFactory.getInstance( "Ed25519" );
 
         // 1. Decodificar a Chave Privada (Base64 -> Bytes -> Objeto Java)
-        byte[] privateKeyBytes = Decoders.BASE64.decode(privateKeyString);
-        PKCS8EncodedKeySpec privateSpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-        this.privateKey = keyFactory.generatePrivate(privateSpec);
+        byte[] privateKeyBytes = Decoders.BASE64.decode( privateKeyString );
+        PKCS8EncodedKeySpec privateSpec = new PKCS8EncodedKeySpec( privateKeyBytes );
+        this.privateKey = keyFactory.generatePrivate( privateSpec );
 
         // 2. Decodificar a Chave Pública
-        byte[] publicKeyBytes = Decoders.BASE64.decode(publicKeyString);
-        X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(publicKeyBytes);
-        this.publicKey = keyFactory.generatePublic(publicSpec);
+        byte[] publicKeyBytes = Decoders.BASE64.decode( publicKeyString );
+        X509EncodedKeySpec publicSpec = new X509EncodedKeySpec( publicKeyBytes );
+        this.publicKey = keyFactory.generatePublic( publicSpec );
     }
 
-    public String generateToken(String userID) {
-        return Jwts.builder()
-                .subject(userID)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(privateKey, Jwts.SIG.EdDSA)
-                .compact();
+    public String generateToken( String userID )
+    {
+        return Jwts.builder( )
+                .subject( userID )
+                .issuedAt( new Date( ) )
+                .expiration( new Date( System.currentTimeMillis( ) + jwtExpirationMs ) )
+                .signWith( privateKey, Jwts.SIG.EdDSA )
+                .compact( );
     }
 
-    public String getUserIDFromToken(String token) {
-        return Jwts.parser()
-                .verifyWith(publicKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+    public String getUserIDFromToken( String token )
+    {
+        return Jwts.parser( )
+                .verifyWith( publicKey )
+                .build( )
+                .parseSignedClaims( token )
+                .getPayload( )
+                .getSubject( );
     }
 
-    public boolean validateJwtToken(String token) {
-        try {
-            Jwts.parser()
-                .verifyWith(publicKey)
-                .build()
-                .parseSignedClaims(token);
+    public boolean validateJwtToken( String token )
+    {
+        try
+        {
+            Jwts.parser( )
+                    .verifyWith( publicKey )
+                    .build( )
+                    .parseSignedClaims( token );
             return true;
-        } catch (ExpiredJwtException e) {
-            logger.warn("Token JWT expirado: {}", e.getMessage());
-        } catch (JwtException | IllegalArgumentException e) {
-            logger.error("Token JWT inválido: {}", e.getMessage());
+        } catch (ExpiredJwtException e)
+        {
+            logger.warn( "Token JWT expirado: {}", e.getMessage( ) );
+        } catch (JwtException | IllegalArgumentException e)
+        {
+            logger.error( "Token JWT inválido: {}", e.getMessage( ) );
         }
         return false;
     }

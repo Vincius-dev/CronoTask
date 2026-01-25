@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshTokenRequestDTO {
+public class RefreshTokenRequestDTO
+{
     @NotBlank(message = "Refresh token é obrigatório")
     private String refreshToken;
 }

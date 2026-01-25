@@ -8,15 +8,17 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class User {
+public class User
+{
     private final UUID id;
     private String name;
     private String email;
     private String password;
 
-    public static User create(String name, String email, String password) {
+    public static User create( String name, String email, String password )
+    {
         return new User(
-                UUID.randomUUID(),
+                UUID.randomUUID( ),
                 name,
                 email,
                 password

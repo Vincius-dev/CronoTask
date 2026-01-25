@@ -21,9 +21,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
+public class AuthenticationUseCaseImpl implements AuthenticationUseCase
+{
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationUseCaseImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger( AuthenticationUseCaseImpl.class );
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -35,61 +36,69 @@ public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
 
     @Override
     @Transactional
-    public LoginResponseDTO authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
+    public LoginResponseDTO authenticate( String email, String password )
+    {
+        User user = userRepository.findByEmail( email )
+                .orElseThrow( () -> new InvalidCredentialsException( "Email ou senha inválidos" ) );
 
-        if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new InvalidCredentialsException("Email ou senha inválidos");
+        if (!passwordEncoder.matches( password, user.getPassword( ) ))
+            throw new InvalidCredentialsException( "Email ou senha inválidos" );
 
-        refreshTokenRepository.revokeAllByUserId(user.getId());
+        refreshTokenRepository.revokeAllByUserId( user.getId( ) );
 
-        String accessToken = jwtConfig.generateToken(user.getId().toString());
-        String refreshTokenValue = UUID.randomUUID().toString();  // UUID opaco, não JWT!
+        String accessToken = jwtConfig.generateToken( user.getId( ).toString( ) );
+        String refreshTokenValue = UUID.randomUUID( ).toString( );
 
         // Salva o refresh token no banco
-        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshTokenExpirationMs / 1000);
-        RefreshToken refreshToken = RefreshToken.create(refreshTokenValue, user.getId(), expiryDate);
-        refreshTokenRepository.save(refreshToken);
+        LocalDateTime expiryDate = LocalDateTime.now( ).plusSeconds( refreshTokenExpirationMs / 1000 );
+        RefreshToken refreshToken = RefreshToken.create( refreshTokenValue, user.getId( ), expiryDate );
+        refreshTokenRepository.save( refreshToken );
 
-        return new LoginResponseDTO(accessToken, refreshTokenValue);
+        return new LoginResponseDTO( accessToken, refreshTokenValue );
     }
 
     @Override
-    public String validateToken(String token) {
-        if (!jwtConfig.validateJwtToken(token))
-            throw new InvalidCredentialsException("Token inválido ou expirado");
+    public String validateToken( String token )
+    {
+        if (!jwtConfig.validateJwtToken( token ))
+            throw new InvalidCredentialsException( "Token inválido ou expirado" );
 
-        return jwtConfig.getUserIDFromToken(token);
+        return jwtConfig.getUserIDFromToken( token );
     }
 
     @Override
     @Transactional
-    public LoginResponseDTO refreshToken(String refreshTokenValue) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
-                .orElseThrow(() -> new InvalidCredentialsException("Refresh token inválido"));
+    public LoginResponseDTO refreshToken( String refreshTokenValue )
+    {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken( refreshTokenValue )
+                .orElseThrow( () -> new InvalidCredentialsException( "Refresh token inválido" ) );
 
-        if (refreshToken.isRevoked()) {
-            logger.warn("🚨 POSSÍVEL ROUBO DE TOKEN DETECTADO! Token já foi usado. User ID: {}", refreshToken.getUserId());
-            refreshTokenRepository.revokeAllByUserId(refreshToken.getUserId());
-            throw new TokenRotationException("Token de atualização já foi utilizado. Todos os tokens foram revogados por segurança. Faça login novamente.");
+        if (refreshToken.isRevoked( ))
+        {
+            logger.warn( "🚨 POSSÍVEL ROUBO DE TOKEN DETECTADO! Token já foi usado. User ID: {}",
+                    refreshToken.getUserId( ) );
+            refreshTokenRepository.revokeAllByUserId( refreshToken.getUserId( ) );
+            throw new TokenRotationException(
+                    "Token de atualização já foi utilizado. Todos os tokens foram revogados por segurança. Faça login novamente." );
         }
 
-        if (refreshToken.isExpired())
-            throw new InvalidCredentialsException("Refresh token expirado");
+        if (refreshToken.isExpired( ))
+            throw new InvalidCredentialsException( "Refresh token expirado" );
 
-        String userId = refreshToken.getUserId().toString();
+        String userId = refreshToken.getUserId( ).toString( );
 
-        refreshToken.revoke();
-        refreshTokenRepository.save(refreshToken);
+        refreshToken.revoke( );
+        refreshTokenRepository.save( refreshToken );
 
-        String newAccessToken = jwtConfig.generateToken(userId);
-        String newRefreshTokenValue = UUID.randomUUID().toString();  // Novo UUID opaco
+        String newAccessToken = jwtConfig.generateToken( userId );
+        String newRefreshTokenValue = UUID.randomUUID( ).toString( );  // Novo UUID opaco
 
-        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshTokenExpirationMs / 1000);
-        RefreshToken newRefreshToken = RefreshToken.create(newRefreshTokenValue, UUID.fromString(userId), expiryDate);
-        refreshTokenRepository.save(newRefreshToken);
+        LocalDateTime expiryDate = LocalDateTime.now( ).plusSeconds( refreshTokenExpirationMs / 1000 );
+        RefreshToken newRefreshToken = RefreshToken.create( newRefreshTokenValue,
+                UUID.fromString( userId ),
+                expiryDate );
+        refreshTokenRepository.save( newRefreshToken );
 
-        return new LoginResponseDTO(newAccessToken, newRefreshTokenValue);
+        return new LoginResponseDTO( newAccessToken, newRefreshTokenValue );
     }
 }

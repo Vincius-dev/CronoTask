@@ -17,76 +17,92 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TaskUseCaseImpl implements TaskUseCase {
+public class TaskUseCaseImpl implements TaskUseCase
+{
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
 
     @Transactional
-    public TaskOutputDTO create(TaskInputDTO input) {
+    public TaskOutputDTO create( TaskInputDTO input )
+    {
         Task task = Task.create(
-                input.getUserId(),
-                input.getName(),
-                input.getDescription()
+                input.getUserId( ),
+                input.getName( ),
+                input.getDescription( )
         );
 
-        Task savedTask = taskRepository.save(task);
-        return taskMapper.toDTO(savedTask);
+        Task savedTask = taskRepository.save( task );
+        return taskMapper.toDTO( savedTask );
     }
 
     @Transactional(readOnly = true)
-    public TaskOutputDTO findById(UUID id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
-        return taskMapper.toDTO(task);
+    public TaskOutputDTO findById( UUID id )
+    {
+        Task task = taskRepository.findById( id )
+                .orElseThrow( () -> new ResourceNotFoundException( "Task not found with id: " + id ) );
+        return taskMapper.toDTO( task );
     }
 
     @Transactional(readOnly = true)
-    public List<TaskOutputDTO> findByUserId(UUID userId) {
-        return taskRepository.findByUserId(userId).stream()
-                .map(taskMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<TaskOutputDTO> findByUserId( UUID userId )
+    {
+        return taskRepository.findByUserId( userId ).stream( )
+                .map( taskMapper::toDTO )
+                .collect( Collectors.toList( ) );
     }
 
     @Transactional
-    public TaskOutputDTO update(UUID id, TaskInputDTO input) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+    public TaskOutputDTO update( UUID id, TaskInputDTO input )
+    {
+        Task task = taskRepository.findById( id )
+                .orElseThrow( () -> new ResourceNotFoundException( "Task not found with id: " + id ) );
 
-        task.setName(input.getName());
-        task.setDescription(input.getDescription());
+        task.setName( input.getName( ) );
+        task.setDescription( input.getDescription( ) );
 
-        Task updatedTask = taskRepository.save(task);
-        return taskMapper.toDTO(updatedTask);
+        Task updatedTask = taskRepository.save( task );
+        return taskMapper.toDTO( updatedTask );
     }
 
     @Transactional
-    public void delete(UUID id) {
-        if (!taskRepository.findById(id).isPresent()) {
-            throw new ResourceNotFoundException("Task not found with id: " + id);
+    public void delete( UUID id )
+    {
+        if (!taskRepository.findById( id ).isPresent( ))
+        {
+            throw new ResourceNotFoundException( "Task not found with id: " + id );
         }
-        taskRepository.deleteById(id);
+
+        taskRepository.deleteById( id );
     }
 
     @Transactional
-    public TaskOutputDTO patch(UUID id, TaskPatchDTO patch) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+    public TaskOutputDTO patch( UUID id, TaskPatchDTO patch )
+    {
+        Task task = taskRepository.findById( id ).orElseThrow( () -> new ResourceNotFoundException(
+                "Task not found with id: " + id ) );
 
-        if (patch.getName() != null) {
-            task.setName(patch.getName());
-        }
-        if (patch.getDescription() != null) {
-            task.setDescription(patch.getDescription());
-        }
-        if (patch.getElapsedTime() != null) {
-            task.setElapsedTime(patch.getElapsedTime());
-        }
-        if (patch.getIsRunning() != null) {
-            task.setIsRunning(patch.getIsRunning());
+        if (patch.getName( ) != null)
+        {
+            task.setName( patch.getName( ) );
         }
 
-        Task updatedTask = taskRepository.save(task);
-        return taskMapper.toDTO(updatedTask);
+        if (patch.getDescription( ) != null)
+        {
+            task.setDescription( patch.getDescription( ) );
+        }
+
+        if (patch.getElapsedTime( ) != null)
+        {
+            task.setElapsedTime( patch.getElapsedTime( ) );
+        }
+
+        if (patch.getIsRunning( ) != null)
+        {
+            task.setIsRunning( patch.getIsRunning( ) );
+        }
+
+        Task updatedTask = taskRepository.save( task );
+        return taskMapper.toDTO( updatedTask );
     }
 }

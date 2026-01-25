@@ -10,14 +10,15 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface JpaRefreshTokenRepository extends JpaRepository<RefreshTokenEntity, UUID> {
-    Optional<RefreshTokenEntity> findByToken(String token);
+public interface JpaRefreshTokenRepository extends JpaRepository<RefreshTokenEntity, UUID>
+{
+    Optional<RefreshTokenEntity> findByToken( String token );
 
     @Modifying
     @Query("UPDATE RefreshTokenEntity rt SET rt.revoked = true, rt.revokedAt = :revokedAt WHERE rt.userId = :userId AND rt.revoked = false")
-    void revokeAllByUserId(@Param("userId") UUID userId, @Param("revokedAt") LocalDateTime revokedAt);
+    void revokeAllByUserId( @Param("userId") UUID userId, @Param("revokedAt") LocalDateTime revokedAt );
 
     @Modifying
     @Query("DELETE FROM RefreshTokenEntity rt WHERE rt.expiryDate < :now")
-    void deleteExpiredTokens(@Param("now") LocalDateTime now);
+    void deleteExpiredTokens( @Param("now") LocalDateTime now );
 }

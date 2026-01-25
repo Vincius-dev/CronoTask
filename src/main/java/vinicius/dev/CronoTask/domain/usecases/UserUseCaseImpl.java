@@ -16,87 +16,101 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserUseCaseImpl implements UserUseCase {
+public class UserUseCaseImpl implements UserUseCase
+{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Transactional
-    public UserOutputDTO create(UserInputDTO input) {
-        if (userRepository.existsByEmail(input.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + input.getEmail());
+    public UserOutputDTO create( UserInputDTO input )
+    {
+        if (userRepository.existsByEmail( input.getEmail( ) ))
+        {
+            throw new EmailAlreadyExistsException( "Email already exists: " + input.getEmail( ) );
         }
 
         User user = User.create(
-                input.getName(),
-                input.getEmail(),
-                input.getPassword()
+                input.getName( ),
+                input.getEmail( ),
+                input.getPassword( )
         );
 
-        User savedUser = userRepository.save(user);
-        return userMapper.toDTO(savedUser);
+        User savedUser = userRepository.save( user );
+        return userMapper.toDTO( savedUser );
     }
 
     @Transactional(readOnly = true)
-    public UserOutputDTO findById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return userMapper.toDTO(user);
+    public UserOutputDTO findById( UUID id )
+    {
+        User user = userRepository.findById( id )
+                .orElseThrow( () -> new ResourceNotFoundException( "User not found with id: " + id ) );
+        return userMapper.toDTO( user );
     }
 
     @Transactional(readOnly = true)
-    public UserOutputDTO findByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
-        return userMapper.toDTO(user);
+    public UserOutputDTO findByEmail( String email )
+    {
+        User user = userRepository.findByEmail( email )
+                .orElseThrow( () -> new ResourceNotFoundException( "User not found with email: " + email ) );
+        return userMapper.toDTO( user );
     }
 
     @Transactional
-    public UserOutputDTO update(UUID id, UserInputDTO input) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    public UserOutputDTO update( UUID id, UserInputDTO input )
+    {
+        User user = userRepository.findById( id )
+                .orElseThrow( () -> new ResourceNotFoundException( "User not found with id: " + id ) );
 
-        if (!user.getEmail().equals(input.getEmail()) && 
-            userRepository.existsByEmail(input.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + input.getEmail());
+        if (!user.getEmail( ).equals( input.getEmail( ) ) &&
+                userRepository.existsByEmail( input.getEmail( ) ))
+        {
+            throw new EmailAlreadyExistsException( "Email already exists: " + input.getEmail( ) );
         }
 
-        user.setName(input.getName());
-        user.setEmail(input.getEmail());
-        user.setPassword(input.getPassword());
+        user.setName( input.getName( ) );
+        user.setEmail( input.getEmail( ) );
+        user.setPassword( input.getPassword( ) );
 
-        User updatedUser = userRepository.save(user);
-        return userMapper.toDTO(updatedUser);
+        User updatedUser = userRepository.save( user );
+        return userMapper.toDTO( updatedUser );
     }
 
     @Transactional
-    public UserOutputDTO patch(UUID id, UserPatchDTO patch) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    public UserOutputDTO patch( UUID id, UserPatchDTO patch )
+    {
+        User user = userRepository.findById( id )
+                .orElseThrow( () -> new ResourceNotFoundException( "User not found with id: " + id ) );
 
-        if (patch.getName() != null) {
-            user.setName(patch.getName());
+        if (patch.getName( ) != null)
+        {
+            user.setName( patch.getName( ) );
         }
-        if (patch.getEmail() != null) {
-            if (!user.getEmail().equals(patch.getEmail()) && 
-                userRepository.existsByEmail(patch.getEmail())) {
-                throw new EmailAlreadyExistsException("Email already exists: " + patch.getEmail());
+        if (patch.getEmail( ) != null)
+        {
+            if (!user.getEmail( ).equals( patch.getEmail( ) ) &&
+                    userRepository.existsByEmail( patch.getEmail( ) ))
+            {
+                throw new EmailAlreadyExistsException( "Email already exists: " + patch.getEmail( ) );
             }
-            user.setEmail(patch.getEmail());
+            user.setEmail( patch.getEmail( ) );
         }
-        if (patch.getPassword() != null) {
-            user.setPassword(patch.getPassword());
+        if (patch.getPassword( ) != null)
+        {
+            user.setPassword( patch.getPassword( ) );
         }
 
-        User updatedUser = userRepository.save(user);
-        return userMapper.toDTO(updatedUser);
+        User updatedUser = userRepository.save( user );
+        return userMapper.toDTO( updatedUser );
     }
 
     @Transactional
-    public void delete(UUID id) {
-        if (!userRepository.findById(id).isPresent()) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
+    public void delete( UUID id )
+    {
+        if (!userRepository.findById( id ).isPresent( ))
+        {
+            throw new ResourceNotFoundException( "User not found with id: " + id );
         }
-        userRepository.deleteById(id);
+        userRepository.deleteById( id );
     }
 }

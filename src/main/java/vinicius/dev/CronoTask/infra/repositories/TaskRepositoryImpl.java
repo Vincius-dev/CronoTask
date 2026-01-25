@@ -13,33 +13,38 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class TaskRepositoryImpl implements TaskRepository {
+public class TaskRepositoryImpl implements TaskRepository
+{
 
     private final TaskJpaRepository jpaRepository;
     private final TaskMapper taskMapper;
 
     @Override
-    public Task save(Task task) {
-        var entity = taskMapper.toEntity(task);
-        var savedEntity = jpaRepository.save(entity);
-        return taskMapper.toDomain(savedEntity);
+    public Task save( Task task )
+    {
+        var entity = taskMapper.toEntity( task );
+        var savedEntity = jpaRepository.save( entity );
+        return taskMapper.toDomain( savedEntity );
     }
 
     @Override
-    public Optional<Task> findById(UUID id) {
-        return jpaRepository.findById(id)
-                .map(taskMapper::toDomain);
+    public Optional<Task> findById( UUID id )
+    {
+        return jpaRepository.findById( id )
+                .map( taskMapper::toDomain );
     }
 
     @Override
-    public List<Task> findByUserId(UUID userId) {
-        return jpaRepository.findByUserId(userId).stream()
-                .map(taskMapper::toDomain)
-                .collect(Collectors.toList());
+    public List<Task> findByUserId( UUID userId )
+    {
+        return jpaRepository.findByUserId( userId ).stream( )
+                .map( taskMapper::toDomain )
+                .collect( Collectors.toList( ) );
     }
 
     @Override
-    public void deleteById(UUID id) {
-        jpaRepository.deleteById(id);
+    public void deleteById( UUID id )
+    {
+        jpaRepository.deleteById( id );
     }
 }

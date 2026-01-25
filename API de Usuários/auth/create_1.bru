@@ -1,0 +1,18 @@
+meta {
+  name: create_1
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "vinicius.farias@teste.com",
+    "password": "123mudar",
+  }
+}

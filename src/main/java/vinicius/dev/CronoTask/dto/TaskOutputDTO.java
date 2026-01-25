@@ -9,7 +9,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskOutputDTO {
+public class TaskOutputDTO
+{
     private UUID id;
     private UUID userId;
     private String name;

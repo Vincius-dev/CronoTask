@@ -11,16 +11,17 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @Data
-public class UserEntity {
+public class UserEntity
+{
 
     @Id
     private UUID id;
-    
+
     private String name;
-    
+
     @Column(unique = true, nullable = false)
     private String email;
-    
+
     @Column(nullable = false)
     private String password;
 }

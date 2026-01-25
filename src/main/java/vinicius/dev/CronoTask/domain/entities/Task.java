@@ -7,7 +7,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class Task {
+public class Task
+{
     private final UUID id;
     private final UUID userId;
     private String name;
@@ -15,9 +16,10 @@ public class Task {
     private Integer elapsedTime;
     private Boolean isRunning;
 
-    public static Task create(UUID userId, String name, String description) {
+    public static Task create( UUID userId, String name, String description )
+    {
         return new Task(
-                UUID.randomUUID(),
+                UUID.randomUUID( ),
                 userId,
                 name,
                 description,

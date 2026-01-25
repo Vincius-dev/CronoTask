@@ -16,7 +16,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenEntity {
+public class RefreshTokenEntity
+{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

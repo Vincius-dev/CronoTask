@@ -11,37 +11,43 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl implements UserRepository
+{
 
     private final UserJpaRepository jpaRepository;
     private final UserMapper userMapper;
 
     @Override
-    public User save(User user) {
-        var entity = userMapper.toEntity(user);
-        var savedEntity = jpaRepository.save(entity);
-        return userMapper.toDomain(savedEntity);
+    public User save( User user )
+    {
+        var entity = userMapper.toEntity( user );
+        var savedEntity = jpaRepository.save( entity );
+        return userMapper.toDomain( savedEntity );
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
-        return jpaRepository.findById(id)
-                .map(userMapper::toDomain);
+    public Optional<User> findById( UUID id )
+    {
+        return jpaRepository.findById( id )
+                .map( userMapper::toDomain );
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return jpaRepository.findByEmail(email)
-                .map(userMapper::toDomain);
+    public Optional<User> findByEmail( String email )
+    {
+        return jpaRepository.findByEmail( email )
+                .map( userMapper::toDomain );
     }
 
     @Override
-    public void deleteById(UUID id) {
-        jpaRepository.deleteById(id);
+    public void deleteById( UUID id )
+    {
+        jpaRepository.deleteById( id );
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return jpaRepository.existsByEmail(email);
+    public boolean existsByEmail( String email )
+    {
+        return jpaRepository.existsByEmail( email );
     }
 }

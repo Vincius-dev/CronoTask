@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
-    List<TaskEntity> findByUserId(UUID userId);
+public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID>
+{
+    List<TaskEntity> findByUserId( UUID userId );
 }

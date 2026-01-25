@@ -9,53 +9,63 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler
+{
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(
-            ResourceNotFoundException ex, 
-            HttpServletRequest request) {
-        
+    public ResponseEntity<ErrorResponse> handleResourceNotFound( ResourceNotFoundException ex, HttpServletRequest request )
+    {
+
         ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now( ),
+                HttpStatus.NOT_FOUND.value( ),
                 "Not Found",
-                ex.getMessage(),
-                request.getRequestURI()
+                ex.getMessage( ),
+                request.getRequestURI( )
         );
-        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+        return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( error );
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(
-            EmailAlreadyExistsException ex, 
-            HttpServletRequest request) {
-        
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExists( EmailAlreadyExistsException ex, HttpServletRequest request )
+    {
         ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now( ),
+                HttpStatus.CONFLICT.value( ),
                 "Conflict",
-                ex.getMessage(),
-                request.getRequestURI()
+                ex.getMessage( ),
+                request.getRequestURI( )
         );
-        
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+
+        return ResponseEntity.status( HttpStatus.CONFLICT ).body( error );
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials( InvalidCredentialsException ex, HttpServletRequest request )
+    {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now( ),
+                HttpStatus.BAD_REQUEST.value( ),
+                "BAD REQUEST",
+                ex.getMessage( ),
+                request.getRequestURI( )
+        );
+
+        return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( error );
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception ex, 
-            HttpServletRequest request) {
-        
+    public ResponseEntity<ErrorResponse> handleGenericException( Exception ex, HttpServletRequest request )
+    {
         ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                LocalDateTime.now( ),
+                HttpStatus.INTERNAL_SERVER_ERROR.value( ),
                 "Internal Server Error",
                 "An unexpected error occurred",
-                request.getRequestURI()
+                request.getRequestURI( )
         );
-        
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+
+        return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( error );
     }
 }

@@ -6,14 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfig
+{
 
     @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("API de Usuários")
-                        .version("1.0.0")
-                        .description("Documentação completa da API de estudo"));
+    public OpenAPI customOpenAPI()
+    {
+        return new OpenAPI( )
+                .info( new Info( )
+                        .title( "API de Usuários" )
+                        .version( "1.0.0" )
+                        .description( "Documentação completa da API de estudo" ) );
     }
 }

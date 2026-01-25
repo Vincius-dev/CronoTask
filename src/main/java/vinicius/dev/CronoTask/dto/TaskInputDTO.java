@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class TaskInputDTO {
+public class TaskInputDTO
+{
     private UUID userId;
     private String name;
     private String description;

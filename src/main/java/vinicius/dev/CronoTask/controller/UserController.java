@@ -13,39 +13,46 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController
+{
 
     private final UserUseCase userUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserOutputDTO create(@RequestBody UserInputDTO input) {
-        return userUseCase.create(input);
+    public UserOutputDTO create( @RequestBody UserInputDTO input )
+    {
+        return userUseCase.create( input );
     }
 
     @GetMapping("/{id}")
-    public UserOutputDTO findById(@PathVariable UUID id) {
-        return userUseCase.findById(id);
+    public UserOutputDTO findById( @PathVariable UUID id )
+    {
+        return userUseCase.findById( id );
     }
 
     @GetMapping("/email/{email}")
-    public UserOutputDTO findByEmail(@PathVariable String email) {
-        return userUseCase.findByEmail(email);
+    public UserOutputDTO findByEmail( @PathVariable String email )
+    {
+        return userUseCase.findByEmail( email );
     }
 
     @PutMapping("/{id}")
-    public UserOutputDTO update(@PathVariable UUID id, @RequestBody UserInputDTO input) {
-        return userUseCase.update(id, input);
+    public UserOutputDTO update( @PathVariable UUID id, @RequestBody UserInputDTO input )
+    {
+        return userUseCase.update( id, input );
     }
 
     @PatchMapping("/{id}")
-    public UserOutputDTO patch(@PathVariable UUID id, @RequestBody UserPatchDTO patch) {
-        return userUseCase.patch(id, patch);
+    public UserOutputDTO patch( @PathVariable UUID id, @RequestBody UserPatchDTO patch )
+    {
+        return userUseCase.patch( id, patch );
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
-        userUseCase.delete(id);
+    public void delete( @PathVariable UUID id )
+    {
+        userUseCase.delete( id );
     }
 }

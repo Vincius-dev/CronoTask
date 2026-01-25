@@ -10,7 +10,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "tasks")
 @Data
-public class TaskEntity {
+public class TaskEntity
+{
 
     @Id
     private UUID id;

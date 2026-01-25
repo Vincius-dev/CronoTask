@@ -8,7 +8,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class RefreshToken {
+public class RefreshToken
+{
     private UUID id;
     private String token;
     private UUID userId;
@@ -17,24 +18,27 @@ public class RefreshToken {
     private LocalDateTime createdAt;
     private LocalDateTime revokedAt;
 
-    public static RefreshToken create(String token, UUID userId, LocalDateTime expiryDate) {
+    public static RefreshToken create( String token, UUID userId, LocalDateTime expiryDate )
+    {
         return new RefreshToken(
-                UUID.randomUUID(),
+                UUID.randomUUID( ),
                 token,
                 userId,
                 expiryDate,
                 false,
-                LocalDateTime.now(),
+                LocalDateTime.now( ),
                 null
         );
     }
 
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expiryDate);
+    public boolean isExpired()
+    {
+        return LocalDateTime.now( ).isAfter( expiryDate );
     }
 
-    public void revoke() {
+    public void revoke()
+    {
         this.revoked = true;
-        this.revokedAt = LocalDateTime.now();
+        this.revokedAt = LocalDateTime.now( );
     }
 }
